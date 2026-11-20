@@ -5,7 +5,8 @@ A JVM library over the soroauth signing core, published to a Maven repository as
 
 ## Platform Support
 
-- **Operating systems**: Linux and macOS for native symbols; pure JVM signing is platform-independent.
+- **Operating systems**: Linux and macOS for native symbols; pure JVM signing is
+  platform-independent.
 - **Architectures**: `x86_64`, `aarch64` / `arm64`.
 - **Runtime**: JDK 22+ (requires the final Foreign Function and Memory API).
 

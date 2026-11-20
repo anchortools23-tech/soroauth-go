@@ -45,14 +45,14 @@ the CLI would reject it as an undecodable entry.
 
 ## Outputs
 
-| Output    | Meaning                                                                              |
-| --------- | ------------------------------------------------------------------------------------ |
+| Output    | Meaning                                                                             |
+| --------- | ----------------------------------------------------------------------------------- |
 | `version` | The exact soroauth build identity (tag, commit, build timestamp, and Go toolchain). |
 
 The action writes workflow annotations, prints a one-line summary per entry,
-records its build identity to the job summary (`$GITHUB_STEP_SUMMARY`), and
-sets the `version` action output. Gate on its exit status: a step is green only
-when every entry decoded, matched `expected-arm` when given, and verified (or was
+records its build identity to the job summary (`$GITHUB_STEP_SUMMARY`), and sets
+the `version` action output. Gate on its exit status: a step is green only when
+every entry decoded, matched `expected-arm` when given, and verified (or was
 accepted as unsigned under `allow-unsigned`).
 
 ## Runtime and pinning
@@ -69,7 +69,8 @@ a tag, e.g. `ghcr.io/soroauth/soroauth-go@sha256:…`. The image is signed and
 carries provenance; see
 [Verifying a release](https://github.com/soroauth/soroauth-go#verifying-a-release).
 
-Example pinning both the action ref and the image digest for reproducible verification:
+Example pinning both the action ref and the image digest for reproducible
+verification:
 
 ```yaml
 - uses: soroauth/soroauth-go/integrations/action@3d3c42e5aac5ba805825da76410c181273ba90b1 # pin action by full commit SHA
