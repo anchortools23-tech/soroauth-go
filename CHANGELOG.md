@@ -10,6 +10,21 @@ this project adheres to
 
 ### Added
 
+- Expose `Version` constant in the root package and document it in package docs,
+  ensuring programmatic access to the library version and aligning CLI defaults
+  with the library version. (#676)
+
+- Report the exact `soroauth` build identity (tag, commit, build timestamp, Go
+  version) in the composite GitHub Action outputs (`version`) and job summary
+  (`$GITHUB_STEP_SUMMARY`), with tests and reproducible pinning documentation.
+  (#678)
+
+- Assert structured platform support documentation in each binding README across
+  supported operating systems and architectures. (#670)
+
+- Assert help lines for every public `.PHONY` target and establish documented
+  conventions for internal targets. (#672)
+
 - Add a FROST distributed key generation ceremony in `frost/dkg.go`: every
   participant contributes a VSS commitment and proof of knowledge, verifies
   every peer's contributions, and finishes with exactly the `DKGShare` the FROST
