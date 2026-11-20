@@ -26,6 +26,12 @@ const signed = soroauth.writeSignature(
 console.log(soroauth.inspect(signed));
 ```
 
+## Platform Support
+
+- **Operating systems**: Linux and macOS. Windows is not supported.
+- **Architectures**: `x86_64`, `aarch64` / `arm64`.
+- **Runtime**: Node.js 18 or later.
+
 ## Which package to use
 
 |                                    | `@soroauth/node`             | `@soroauth/wasm`                 |
