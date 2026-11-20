@@ -46,6 +46,13 @@ inputs:
     required: false
     default: 'ghcr.io/soroauth/soroauth-go:latest'
 
+outputs:
+  version:
+    description: >
+      The exact soroauth build identity (tag, commit, build timestamp, and Go toolchain)
+      used for verification.
+    value: ${{ steps.verify.outputs.version }}
+
 runs:
   using: composite
   steps:

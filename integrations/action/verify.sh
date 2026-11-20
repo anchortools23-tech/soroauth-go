@@ -21,7 +21,11 @@ case "${allow_unsigned,,}" in
 esac
 
 run_cli() {
-  docker run --rm -i "$image" "$@"
+  if [[ -n "${SOROAUTH_CLI_OVERRIDE:-}" ]]; then
+    $SOROAUTH_CLI_OVERRIDE "$@"
+  else
+    docker run --rm -i "$image" "$@"
+  fi
 }
 
 # emit_error prints a workflow error annotation. The properties (file, line,
@@ -90,6 +94,43 @@ elif [[ -n "${SOROAUTH_INPUT_ENTRY_FILE:-}" ]]; then
 else
   echo "::error title=soroauth verify::one of entry or entry-file is required"
   exit 1
+fi
+
+# Report the exact soroauth CLI build identity used for verification.
+cli_version_raw="$(run_cli --version 2>/dev/null || echo "soroauth dev (commit: unknown, built: unknown)")"
+tag="$(printf '%s\n' "$cli_version_raw" | sed -n '1p')"
+commit="$(printf '%s\n' "$cli_version_raw" | grep '^commit:' | sed 's/^commit:[[:space:]]*//' || true)"
+built="$(printf '%s\n' "$cli_version_raw" | grep '^built:' | sed 's/^built:[[:space:]]*//' || true)"
+go_ver="$(printf '%s\n' "$cli_version_raw" | grep '^go:' | sed 's/^go:[[:space:]]*//' || true)"
+
+meta=()
+[[ -n "$commit" ]] && meta+=("commit: $commit")
+[[ -n "$built" ]] && meta+=("built: $built")
+[[ -n "$go_ver" ]] && meta+=("go: $go_ver")
+
+if [[ ${#meta[@]} -gt 0 ]]; then
+  meta_joined="$(printf '%s, ' "${meta[@]}")"
+  meta_joined="${meta_joined%, }"
+  cli_version_line="${tag} (${meta_joined})"
+else
+  cli_version_line="${tag}"
+fi
+
+if [[ -n "${GITHUB_OUTPUT:-}" ]]; then
+  echo "version=${cli_version_line}" >> "$GITHUB_OUTPUT"
+fi
+
+if [[ -n "${GITHUB_STEP_SUMMARY:-}" ]]; then
+  {
+    echo "### soroauth verify"
+    echo ""
+    echo "Verified with **soroauth** \`${cli_version_line}\`"
+    echo ""
+    echo '```text'
+    echo "$cli_version_raw"
+    echo '```'
+    echo ""
+  } >> "$GITHUB_STEP_SUMMARY"
 fi
 
 failures=0

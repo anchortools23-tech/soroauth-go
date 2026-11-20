@@ -43,12 +43,17 @@ secret — `soroauth sign --secret-env` — is deliberately not exposed here. Do
 try to route a secret through `entry` or `entry-file`: it has nowhere to go and
 the CLI would reject it as an undecodable entry.
 
-## Output
+## Outputs
 
-The action writes workflow annotations and prints a one-line summary per entry.
-It declares no outputs; gate on its exit status. A step is green only when every
-entry decoded, matched `expected-arm` when given, and verified (or was accepted
-as unsigned under `allow-unsigned`).
+| Output    | Meaning                                                                              |
+| --------- | ------------------------------------------------------------------------------------ |
+| `version` | The exact soroauth build identity (tag, commit, build timestamp, and Go toolchain). |
+
+The action writes workflow annotations, prints a one-line summary per entry,
+records its build identity to the job summary (`$GITHUB_STEP_SUMMARY`), and
+sets the `version` action output. Gate on its exit status: a step is green only
+when every entry decoded, matched `expected-arm` when given, and verified (or was
+accepted as unsigned under `allow-unsigned`).
 
 ## Runtime and pinning
 
@@ -63,3 +68,14 @@ For full reproducibility of the CLI itself, pass `image` as a digest rather than
 a tag, e.g. `ghcr.io/soroauth/soroauth-go@sha256:…`. The image is signed and
 carries provenance; see
 [Verifying a release](https://github.com/soroauth/soroauth-go#verifying-a-release).
+
+Example pinning both the action ref and the image digest for reproducible verification:
+
+```yaml
+- uses: soroauth/soroauth-go/integrations/action@3d3c42e5aac5ba805825da76410c181273ba90b1 # pin action by full commit SHA
+  with:
+    entry-file: fixtures/*.entries
+    network: testnet
+    expected-arm: address_v2
+    image: ghcr.io/soroauth/soroauth-go@sha256:4f83b1c6d3e8e7a68e2f6942054a838be296e8555e1329bfbd03c347f3ff062a # pin image by digest
+```
