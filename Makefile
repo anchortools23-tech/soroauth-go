@@ -43,6 +43,7 @@ FUZZTIME ?= 30s
 # soak is not a replacement for it.
 SOAKTIME ?= 2m
 
+# Internal targets: help check-index
 .PHONY: all help check-index ci-local ci-local-check fmt vet test coverage fuzz soak build server man site md-check md-format vectors vectors-check demo-check diagrams diagrams-check e2e clean parity parity-rust differential wasm wasm-check wasm-budget ts-test jvm-test jvm-native rust-test grpc-test grpc-check freighter-check openapi-test openapi-check action-test
 
 define CI_CHECK_INDEX
